@@ -3,16 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'search_event.dart';
-import 'NavBar.dart'; // Импортируйте ваше меню
-
-class MapPage extends StatefulWidget {
-  const MapPage({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  State<MapPage> createState() => _MapPageState();
-}
+import 'NavBar.dart';
 
 class _MapPageState extends State<MapPage> {
   late final MapController _mapController;
@@ -57,17 +48,13 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Карта'),
-      ),
-      drawer: NavBar(), // Добавить ваше меню
       body: Stack(
         children: [
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
-              center: _userLocation ?? LatLng(59.9343, 30.3351),
-              zoom: 10,
+              initialCenter: _userLocation ?? LatLng(59.9343, 30.3351),
+              initialZoom: 10,
             ),
             children: [
               TileLayer(
@@ -76,8 +63,10 @@ class _MapPageState extends State<MapPage> {
               ),
             ],
           ),
+
+
           Positioned(
-            top: 16,
+            top: 50,
             left: 16,
             right: 16,
             child: Container(
@@ -87,13 +76,13 @@ class _MapPageState extends State<MapPage> {
               ),
               child: Row(
                 children: [
-                  Expanded(
+                  const Expanded(
                     child: TextField(
                       style: TextStyle(fontSize: 20),
                       decoration: InputDecoration(
                         hintText: 'Найти событие',
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(16),
+                        contentPadding: EdgeInsets.all(16),
                       ),
                     ),
                   ),
@@ -136,4 +125,13 @@ class _MapPageState extends State<MapPage> {
       ),
     );
   }
+}
+
+class MapPage extends StatefulWidget {
+  const MapPage({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<MapPage> createState() => _MapPageState();
 }

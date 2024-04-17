@@ -9,7 +9,7 @@ class NavBar extends StatelessWidget {
         children: [
           UserAccountsDrawerHeader(
               accountName: Text(
-                'Экстаз',
+                'Пользователь',
                 style: TextStyle(
                   color: Colors.black
                 ),
@@ -23,7 +23,7 @@ class NavBar extends StatelessWidget {
             currentAccountPicture: CircleAvatar(
               child: ClipOval(
                 child: Image.asset(
-                  'assets/chern.png',
+                  'assets/welcome.png',
                   width: 90,
                   height: 90,
                   fit: BoxFit.cover,

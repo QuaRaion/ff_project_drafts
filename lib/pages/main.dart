@@ -1,12 +1,10 @@
-
 import 'package:flutter/material.dart';
-import 'homepage.dart';
-
+import 'login_page.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     debugShowCheckedModeBanner: false,
-    home: HomePage(),
+    home: LoginPage(),
   ));
 }
 
