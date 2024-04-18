@@ -1,6 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
 import 'package:vers2/design/colors.dart';
+import 'package:vers2/registration/registration_methods.dart';
+
+import 'map_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -10,6 +14,8 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   bool _isEmailValid = true;
   final TextEditingController _passwordController = TextEditingController();
@@ -58,9 +64,9 @@ class _SignUpPageState extends State<SignUpPage> {
                     const Padding(padding: EdgeInsets.only(bottom: 20),),
                     buildEmailTextField('Почта'),
                     const Padding(padding: EdgeInsets.only(bottom: 20),),
-                    buildTextField('Пароль', obscureText: true, controller: _passwordController),
+                    buildTextField('Пароль должен содержать не менее 6 символов', obscureText: true, controller: _passwordController),
                     const Padding(padding: EdgeInsets.only(bottom: 20),),
-                    buildTextField('Повторный пароль', obscureText: true, controller: _confirmPasswordController),
+                    buildTextField('Повторите пароль', obscureText: true, controller: _confirmPasswordController),
                     const Padding(padding: EdgeInsets.only(bottom: 30),),
 
                     MaterialButton(
@@ -71,7 +77,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       onPressed: () {
                         // Проверка введенной почты перед переходом на другой экран
                         if (_isEmailValid) {
-                          Navigator.pop(context);
+                          _signUp();
                           //реализия сохранения ин-фы о пользователе в БД
                         } else {
                           // // Вывод сообщения об ошибке
@@ -141,6 +147,7 @@ class _SignUpPageState extends State<SignUpPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 20.0),
         child: TextField(
+          controller: _usernameController,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hintText,
@@ -229,4 +236,23 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
+
+  void _signUp() async {
+    String username = _usernameController.text;
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signUpWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("User is successfully created");
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MapPage()));
+    }
+    else{
+      print("Error");
+    }
+  }
 }
+

@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:vers2/design/colors.dart';
+import '../registration/registration_methods.dart';
 import 'map_page.dart';
 import 'signup.dart';
 
@@ -13,6 +15,9 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  final FirebaseAuthService _auth = FirebaseAuthService();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +58,7 @@ class _LoginPageState extends State<LoginPage> {
                     ),
 
 
-                    buildLoginTextField('Логин'),
+                    buildLoginTextField('Адрес электронной почты'),
                     const Padding(padding: EdgeInsets.only(bottom: 20),),
                     buildTextField('Пароль'),
                     const Padding(padding: EdgeInsets.only(bottom: 30),),
@@ -62,9 +67,7 @@ class _LoginPageState extends State<LoginPage> {
                       minWidth: 200,
                       height: 70,
                       onPressed: () {
-                        Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => const MapPage()));
+                        _signIn();
                       },
                       color: accentColor,
                       shape: RoundedRectangleBorder(
@@ -129,6 +132,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 20.0),
         child: TextField(
+          controller: _emailController,
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: hintText,
@@ -153,6 +157,7 @@ class _LoginPageState extends State<LoginPage> {
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 20.0),
         child: TextField(
+          controller: _passwordController,
           obscureText: true, // Устанавливаем true, чтобы скрыть ввод
           decoration: InputDecoration(
             border: InputBorder.none,
@@ -164,6 +169,22 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+  void _signIn() async {
+    String email = _emailController.text;
+    String password = _passwordController.text;
+
+    User? user = await _auth.signInWithEmailAndPassword(email, password);
+
+    if (user != null) {
+      print("User is successfully signed in");
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const MapPage()));
+    }
+    else{
+      print("Error");
+    }
   }
 
 }
